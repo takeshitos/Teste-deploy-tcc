@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, NavLink as RouterNavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import rccLogo from "@/assets/logo_rcc.png";
 import { useAuth } from "@/contexts/AuthContext";
@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { User as UserIcon } from "lucide-react";
+import { cn } from "@/lib/utils"; // Importar cn para combinar classes
 
 export const Navigation = () => {
   const { user, profile, signOut } = useAuth();
@@ -25,6 +26,12 @@ export const Navigation = () => {
   // Check if the user has 'admin' or 'coordenador' role
   const isAdminOrCoordenador = profile?.role === 'admin' || profile?.role === 'coordenador';
 
+  const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+    cn(
+      "text-xl font-medium hover:opacity-80 transition-opacity",
+      isActive && "border-b-2 border-current" // Adiciona sublinhado se o link estiver ativo
+    );
+
   return (
     <nav className="bg-primary text-primary-foreground shadow-lg sticky top-0 z-50 h-20 flex items-center justify-between">
       {/* Logo da Aplicação - LEFT */}
@@ -34,26 +41,26 @@ export const Navigation = () => {
       
       {/* Links de Navegação - CENTER */}
       <div className="flex-grow flex justify-center items-center gap-6">
-        <Link to="/" className="text-xl font-medium hover:opacity-80 transition-opacity">
+        <RouterNavLink to="/" className={navLinkClass}>
           Início
-        </Link>
-        <Link to="/eventos" className="text-xl font-medium hover:opacity-80 transition-opacity">
+        </RouterNavLink>
+        <RouterNavLink to="/eventos" className={navLinkClass}>
           Eventos
-        </Link>
-        <Link to="/grupos-oracao" className="text-xl font-medium hover:opacity-80 transition-opacity">
+        </RouterNavLink>
+        <RouterNavLink to="/grupos-oracao" className={navLinkClass}>
           Grupos de Oração
-        </Link>
+        </RouterNavLink>
         
         {user && (
-          <Link to="/perfil" className="text-xl font-medium hover:opacity-80 transition-opacity">
+          <RouterNavLink to="/perfil" className={navLinkClass}>
             Perfil
-          </Link>
+          </RouterNavLink>
         )}
 
         {isAdminOrCoordenador && (
-          <Link to="/admin/gerenciar-publicacoes" className="text-xl font-medium hover:opacity-80 transition-opacity hidden md:block">
+          <RouterNavLink to="/admin/gerenciar-publicacoes" className={cn(navLinkClass, "hidden md:block")}>
             Gerenciar Publicações
-          </Link>
+          </RouterNavLink>
         )}
       </div>
 
