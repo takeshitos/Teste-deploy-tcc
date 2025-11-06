@@ -9,6 +9,7 @@ import Auth from "./pages/Auth";
 import Eventos from "./pages/Eventos";
 import GruposOracao from "./pages/GruposOracao";
 import Perfil from "./pages/Perfil";
+import EventDetail from "./pages/EventDetail"; // Import the new EventDetail page
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/eventos" element={<Eventos />} />
             <Route path="/grupos-oracao" element={<GruposOracao />} />
             <Route path="/perfil" element={<Perfil />} />
+            <Route path="/evento/:id" element={<EventDetail />} /> {/* New route for event details */}
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
