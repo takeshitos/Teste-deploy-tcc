@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import rccLogo from "@/assets/rcc-logo.png";
+import rccLogo from "@/assets/Logo_RCC.png"; // Updated to use the new logo
 import { useAuth } from "@/contexts/AuthContext"; // Import useAuth
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
