@@ -101,7 +101,7 @@ export const Navigation = () => {
           <Link to="/auth">
             <Button 
               variant="secondary" 
-              size="sm"
+              size="lg"
               className="bg-background text-foreground hover:bg-accent font-semibold"
             >
               ENTRAR
