@@ -45,8 +45,8 @@ export const Navigation = () => {
         </Link>
         
         {isAdminOrCoordenador && (
-          <Link to="/admin/criar-publicacao" className="text-sm font-medium hover:opacity-80 transition-opacity hidden md:block">
-            Criar Publicação
+          <Link to="/admin/gerenciar-publicacoes" className="text-sm font-medium hover:opacity-80 transition-opacity hidden md:block">
+            Gerenciar Publicações
           </Link>
         )}
 
@@ -76,9 +76,14 @@ export const Navigation = () => {
                 <Link to="/perfil">Minha Conta</Link>
               </DropdownMenuItem>
               {isAdminOrCoordenador && (
-                <DropdownMenuItem asChild>
-                  <Link to="/admin/criar-publicacao">Criar Publicação</Link>
-                </DropdownMenuItem>
+                <>
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin/criar-publicacao">Criar Publicação</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin/gerenciar-publicacoes">Gerenciar Publicações</Link>
+                  </DropdownMenuItem>
+                </>
               )}
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout}>
