@@ -4,9 +4,9 @@ import {
   PaginationEllipsis,
   PaginationItem,
   PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
 } from "@/components/ui/pagination";
+import { ChevronLeft, ChevronRight } from "lucide-react"; // Importar ícones
+import { cn } from "@/lib/utils"; // Importar cn para combinar classes
 
 interface CustomPaginationProps {
   currentPage: number;
@@ -16,8 +16,7 @@ interface CustomPaginationProps {
 
 export const CustomPagination = ({ currentPage, totalPages, onPageChange }: CustomPaginationProps) => {
   const pageNumbers = [];
-  // Determine which page numbers to show (e.g., current, prev, next, and ellipsis)
-  const maxPagesToShow = 5; // Max number of page links to display
+  const maxPagesToShow = 5;
   let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
   let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
 
@@ -33,12 +32,17 @@ export const CustomPagination = ({ currentPage, totalPages, onPageChange }: Cust
     <Pagination>
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious
+          <PaginationLink
             onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-            className={currentPage === 1 ? "pointer-events-none opacity-50" : undefined}
+            className={cn(
+              "gap-1 pl-2.5",
+              currentPage === 1 ? "pointer-events-none opacity-50" : undefined
+            )}
+            aria-label="Ir para a página anterior"
           >
-            Anterior
-          </PaginationPrevious>
+            <ChevronLeft className="h-4 w-4" />
+            <span>Anterior</span>
+          </PaginationLink>
         </PaginationItem>
 
         {startPage > 1 && (
@@ -79,12 +83,17 @@ export const CustomPagination = ({ currentPage, totalPages, onPageChange }: Cust
         )}
 
         <PaginationItem>
-          <PaginationNext
+          <PaginationLink
             onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-            className={currentPage === totalPages ? "pointer-events-none opacity-50" : undefined}
+            className={cn(
+              "gap-1 pr-2.5",
+              currentPage === totalPages ? "pointer-events-none opacity-50" : undefined
+            )}
+            aria-label="Ir para a próxima página"
           >
-            Próximo
-          </PaginationNext>
+            <span>Próximo</span>
+            <ChevronRight className="h-4 w-4" />
+          </PaginationLink>
         </PaginationItem>
       </PaginationContent>
     </Pagination>
