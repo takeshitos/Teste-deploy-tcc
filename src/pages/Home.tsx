@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import heroPrayer from "@/assets/hero-prayer.jpg";
 import eventFormacao from "@/assets/event-formacao.jpg";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CustomPagination } from "@/components/CustomPagination"; // Importar o componente de paginação
 
 interface Evento {
   id: string;
@@ -33,9 +34,11 @@ interface Noticia {
 const Home = () => {
   const { user, signOut } = useAuth();
   const [eventos, setEventos] = useState<Evento[]>([]);
-  const [latestNews, setLatestNews] = useState<Noticia[]>([]); // Para a aba "Últimas Notícias"
-  const [allNews, setAllNews] = useState<Noticia[]>([]); // Para a aba "Todos os Comunicados"
+  const [latestNews, setLatestNews] = useState<Noticia[]>([]);
+  const [allNews, setAllNews] = useState<Noticia[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1); // Estado para a página atual
+  const itemsPerPage = 4; // 4 itens por página
 
   useEffect(() => {
     fetchData();
@@ -62,7 +65,7 @@ const Home = () => {
         .select("id, titulo, conteudo, imagem_url, created_at, button_text, button_link")
         .eq("publicado", true)
         .order("created_at", { ascending: false })
-        .limit(3); // Limite para as últimas notícias
+        .limit(3);
 
       if (latestNewsData) {
         setLatestNews(latestNewsData);
@@ -83,6 +86,16 @@ const Home = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Lógica de paginação para "Todos os Comunicados"
+  const indexOfLastNews = currentPage * itemsPerPage;
+  const indexOfFirstNews = indexOfLastNews - itemsPerPage;
+  const currentNews = allNews.slice(indexOfFirstNews, indexOfLastNews);
+  const totalPages = Math.ceil(allNews.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
   };
 
   return (
@@ -171,10 +184,15 @@ const Home = () => {
             ) : allNews.length > 0 ? (
               <>
                 <div className="space-y-6">
-                  {allNews.map((noticia, index) => (
+                  {currentNews.map((noticia, index) => (
                     <NewsCard key={noticia.id} {...noticia} imageOnRight={index % 2 !== 0} />
                   ))}
                 </div>
+                <CustomPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
               </>
             ) : (
               <div className="text-center py-12 bg-muted rounded-lg">
