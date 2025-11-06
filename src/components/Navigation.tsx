@@ -37,13 +37,19 @@ export const Navigation = () => {
         <Link to="/" className="text-sm font-medium hover:opacity-80 transition-opacity">
           Início
         </Link>
-        <Link to="/grupos-oracao" className="text-sm font-medium hover:opacity-80 transition-opacity hidden sm:block">
-          Grupos de Oração
-        </Link>
         <Link to="/eventos" className="text-sm font-medium hover:opacity-80 transition-opacity">
           Eventos
         </Link>
+        <Link to="/grupos-oracao" className="text-sm font-medium hover:opacity-80 transition-opacity">
+          Grupos de Oração
+        </Link>
         
+        {user && (
+          <Link to="/perfil" className="text-sm font-medium hover:opacity-80 transition-opacity">
+            Perfil
+          </Link>
+        )}
+
         {isAdminOrCoordenador && (
           <Link to="/admin/gerenciar-publicacoes" className="text-sm font-medium hover:opacity-80 transition-opacity hidden md:block">
             Gerenciar Publicações
