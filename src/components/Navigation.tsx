@@ -24,13 +24,10 @@ export const Navigation = () => {
 
   return (
     <nav className="bg-primary text-primary-foreground shadow-lg sticky top-0 z-50 h-20 flex items-center justify-between">
-      {/* Logo e Título da Aplicação */}
+      {/* Logo da Aplicação */}
       <Link to="/" className="flex items-center gap-3 h-full bg-white px-4 rounded-r-lg hover:opacity-90 transition-opacity">
-        <img src={rccLogo} alt="RCC Logo" className="h-16 w-auto" /> {/* Logo maior */}
-        <div className="hidden sm:block">
-          <span className="text-sm font-medium block text-foreground">Renovação Carismática Católica</span>
-          <span className="text-xs opacity-90 text-muted-foreground">Diocese de Cornélio Procópio</span>
-        </div>
+        <img src={rccLogo} alt="RCC Logo" className="h-16 w-auto" />
+        {/* O texto ao lado da logo foi removido */}
       </Link>
       
       {/* Links de Navegação e Menu do Usuário */}
