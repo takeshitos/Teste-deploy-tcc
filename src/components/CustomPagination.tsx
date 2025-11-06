@@ -29,13 +29,13 @@ export const CustomPagination = ({ currentPage, totalPages, onPageChange }: Cust
   }
 
   return (
-    <Pagination className="mb-4">
+    <Pagination className="mb-4 mt-2.5"> {/* Adicionado mt-2.5 para espaçamento superior de 10px */}
       <PaginationContent className="flex-wrap space-x-1">
         <PaginationItem>
           <PaginationLink
             onClick={() => onPageChange(Math.max(1, currentPage - 1))}
             className={cn(
-              "flex items-center gap-1 h-10 px-12 py-2.5", // Aumentado o padding horizontal para 1.5x de px-8
+              "flex items-center gap-1 h-10 px-12 py-2.5",
               currentPage === 1 ? "pointer-events-none opacity-50" : undefined
             )}
             aria-label="Ir para a página anterior"
@@ -87,7 +87,7 @@ export const CustomPagination = ({ currentPage, totalPages, onPageChange }: Cust
           <PaginationLink
             onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
             className={cn(
-              "flex items-center gap-1 h-10 px-12 py-2.5", // Aumentado o padding horizontal para 1.5x de px-8
+              "flex items-center gap-1 h-10 px-12 py-2.5",
               currentPage === totalPages ? "pointer-events-none opacity-50" : undefined
             )}
             aria-label="Ir para a próxima página"
