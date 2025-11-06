@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import rccLogo from "@/assets/logo_rcc.png";
+import rccLogo from "@/assets/logo_rcc.png"; // Verificando a importação da logo
 import { useAuth } from "@/contexts/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -26,8 +26,7 @@ export const Navigation = () => {
     <nav className="bg-primary text-primary-foreground shadow-lg sticky top-0 z-50 h-20 flex items-center justify-between">
       {/* Logo da Aplicação */}
       <Link to="/" className="flex items-center gap-3 h-full bg-white px-4 rounded-r-lg hover:opacity-90 transition-opacity">
-        <img src={rccLogo} alt="RCC Logo" className="h-16 w-auto" />
-        {/* O texto ao lado da logo foi removido */}
+        <img src={rccLogo} alt="RCC Logo" className="h-16 w-auto" /> {/* A logo está sendo usada aqui */}
       </Link>
       
       {/* Links de Navegação e Menu do Usuário */}
