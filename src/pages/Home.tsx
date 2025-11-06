@@ -7,7 +7,6 @@ import { supabase } from "@/integrations/supabase/client";
 import heroPrayer from "@/assets/hero-prayer.jpg";
 import eventFormacao from "@/assets/event-formacao.jpg";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CustomPagination } from "@/components/CustomPagination"; // Importar o novo componente de paginação
 
 interface Evento {
   id: string;
@@ -37,8 +36,6 @@ const Home = () => {
   const [latestNews, setLatestNews] = useState<Noticia[]>([]); // Para a aba "Últimas Notícias"
   const [allNews, setAllNews] = useState<Noticia[]>([]); // Para a aba "Todos os Comunicados"
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const newsPerPage = 4; // 4 comunicados por aba
 
   useEffect(() => {
     fetchData();
@@ -86,16 +83,6 @@ const Home = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  // Lógica de paginação para "Todos os Comunicados"
-  const indexOfLastNews = currentPage * newsPerPage;
-  const indexOfFirstNews = indexOfLastNews - newsPerPage;
-  const currentPaginatedNews = allNews.slice(indexOfFirstNews, indexOfLastNews);
-  const totalPages = Math.ceil(allNews.length / newsPerPage);
-
-  const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
   };
 
   return (
@@ -184,19 +171,10 @@ const Home = () => {
             ) : allNews.length > 0 ? (
               <>
                 <div className="space-y-6">
-                  {currentPaginatedNews.map((noticia, index) => (
+                  {allNews.map((noticia, index) => (
                     <NewsCard key={noticia.id} {...noticia} imageOnRight={index % 2 !== 0} />
                   ))}
                 </div>
-                {totalPages > 1 && (
-                  <div className="mt-8 flex justify-center">
-                    <CustomPagination
-                      currentPage={currentPage}
-                      totalPages={totalPages}
-                      onPageChange={handlePageChange}
-                    />
-                  </div>
-                )}
               </>
             ) : (
               <div className="text-center py-12 bg-muted rounded-lg">
