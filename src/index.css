@@ -25,12 +25,12 @@ All colors MUST be HSL.
     /* Primary Hover: Slightly darker green */
     --primary-hover: 160 60% 28%;
 
-    /* Secondary: Vibrant Orange for CTAs */
-    --secondary: 14 100% 57%;
+    /* Secondary: Vibrant Yellow for CTAs */
+    --secondary: 47 100% 50%; /* Changed to #fdc800 */
     --secondary-foreground: 0 0% 100%;
     
-    /* Secondary Hover: Slightly darker orange */
-    --secondary-hover: 14 100% 50%;
+    /* Secondary Hover: Slightly darker yellow */
+    --secondary-hover: 47 100% 43%; /* Adjusted for hover */
 
     /* Muted: Soft cream tones */
     --muted: 42 20% 94%;
@@ -81,10 +81,12 @@ All colors MUST be HSL.
     
     --primary-hover: 160 55% 38%;
 
-    --secondary: 14 100% 62%;
+    /* Secondary: Vibrant Yellow for CTAs */
+    --secondary: 47 100% 62%; /* Changed to #fdc800 for dark theme */
     --secondary-foreground: 0 0% 100%;
     
-    --secondary-hover: 14 100% 55%;
+    /* Secondary Hover: Slightly darker yellow */
+    --secondary-hover: 47 100% 55%; /* Adjusted for hover */
 
     --muted: 160 20% 18%;
     --muted-foreground: 42 15% 65%;
