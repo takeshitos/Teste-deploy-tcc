@@ -27,13 +27,13 @@ export const Navigation = () => {
 
   return (
     <nav className="bg-primary text-primary-foreground shadow-lg sticky top-0 z-50 h-20 flex items-center justify-between">
-      {/* Logo da Aplicação */}
+      {/* Logo da Aplicação - LEFT */}
       <Link to="/" className="flex items-center gap-3 h-full bg-white px-4 rounded-r-lg hover:opacity-90 transition-opacity">
         <img src={rccLogo} alt="RCC Logo" className="h-16 w-auto" />
       </Link>
       
-      {/* Links de Navegação e Menu do Usuário */}
-      <div className="flex items-center gap-6 pr-4">
+      {/* Links de Navegação - CENTER */}
+      <div className="flex-grow flex justify-center items-center gap-6">
         <Link to="/" className="text-xl font-medium hover:opacity-80 transition-opacity">
           Início
         </Link>
@@ -55,7 +55,10 @@ export const Navigation = () => {
             Gerenciar Publicações
           </Link>
         )}
+      </div>
 
+      {/* Menu do Usuário / Botão ENTRAR - RIGHT */}
+      <div className="flex items-center pr-4">
         {user && profile ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
