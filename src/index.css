@@ -8,96 +8,90 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* RCC Primary Green - Main brand color */
-    --background: 42 25% 96%;
-    --foreground: 160 50% 15%;
+    /* Novas cores base */
+    --background: 200 27% 79%; /* #b8d0dc */
+    --foreground: 198 100% 17%; /* #004058 */
 
     --card: 0 0% 100%;
-    --card-foreground: 160 50% 15%;
+    --card-foreground: 198 100% 17%; /* #004058 */
 
     --popover: 0 0% 100%;
-    --popover-foreground: 160 50% 15%;
+    --popover-foreground: 198 100% 17%; /* #004058 */
 
-    /* Primary: Deep RCC Green */
-    --primary: 160 55% 35%;
-    --primary-foreground: 0 0% 100%;
+    /* Primary: Verde Escuro */
+    --primary: 158 100% 19%; /* #006036 */
+    --primary-foreground: 0 0% 100%; /* Branco */
     
-    /* Primary Hover: Slightly darker green */
-    --primary-hover: 160 60% 28%;
+    /* Primary Hover: Ligeiramente mais escuro */
+    --primary-hover: 158 100% 15%;
 
-    /* Secondary: Vibrant Orange for CTAs */
-    --secondary: 14 100% 57%;
-    --secondary-foreground: 0 0% 100%;
+    /* Secondary: Amarelo/Dourado */
+    --secondary: 47 100% 50%; /* #fdc800 */
+    --secondary-foreground: 198 100% 17%; /* #004058 */
     
-    /* Secondary Hover: Slightly darker orange */
-    --secondary-hover: 14 100% 50%;
+    /* Secondary Hover: Ligeiramente mais escuro */
+    --secondary-hover: 47 100% 40%;
 
-    /* Muted: Soft cream tones */
-    --muted: 42 20% 94%;
-    --muted-foreground: 160 20% 40%;
+    /* Muted: Tons suaves baseados no novo background */
+    --muted: 200 20% 85%;
+    --muted-foreground: 198 20% 40%;
 
-    /* Accent: Light green for highlights */
-    --accent: 160 45% 88%;
-    --accent-foreground: 160 50% 20%;
+    /* Accent: Um tom mais claro do foreground */
+    --accent: 198 30% 70%;
+    --accent-foreground: 198 100% 17%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 160 15% 85%;
-    --input: 160 15% 90%;
-    --ring: 160 55% 35%;
+    --border: 200 15% 70%;
+    --input: 200 15% 75%;
+    --ring: 158 100% 19%;
 
     --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 160 30% 8%;
-    --foreground: 42 25% 95%;
+    /* Novas cores base para o tema escuro */
+    --background: 200 20% 15%;
+    --foreground: 198 50% 80%;
 
-    --card: 160 25% 12%;
-    --card-foreground: 42 25% 95%;
+    --card: 200 20% 18%;
+    --card-foreground: 198 50% 80%;
 
-    --popover: 160 25% 12%;
-    --popover-foreground: 42 25% 95%;
+    --popover: 200 20% 18%;
+    --popover-foreground: 198 50% 80%;
 
-    --primary: 160 50% 45%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 158 100% 30%;
+    --primary-foreground: 0 0% 98%;
     
-    --primary-hover: 160 55% 38%;
+    --primary-hover: 158 100% 25%;
 
-    --secondary: 14 100% 62%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 47 100% 60%;
+    --secondary-foreground: 198 100% 17%;
     
-    --secondary-hover: 14 100% 55%;
+    --secondary-hover: 47 100% 50%;
 
-    --muted: 160 20% 18%;
-    --muted-foreground: 42 15% 65%;
+    --muted: 200 15% 25%;
+    --muted-foreground: 198 20% 60%;
 
-    --accent: 160 30% 22%;
-    --accent-foreground: 42 25% 90%;
+    --accent: 200 25% 30%;
+    --accent-foreground: 198 50% 80%;
 
     --destructive: 0 62.8% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 160 20% 25%;
-    --input: 160 20% 22%;
-    --ring: 160 50% 45%;
+    --border: 200 15% 35%;
+    --input: 200 15% 28%;
+    --ring: 158 100% 30%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
