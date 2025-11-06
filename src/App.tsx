@@ -11,8 +11,9 @@ import GruposOracao from "./pages/GruposOracao";
 import Perfil from "./pages/Perfil";
 import EventDetail from "./pages/EventDetail";
 import CreateNews from "./pages/CreateNews";
-import ManageNews from "./pages/ManageNews"; // Import the new ManageNews page
-import EditNews from "./pages/EditNews";     // Import the new EditNews page
+import ManageNews from "./pages/ManageNews";
+import EditNews from "./pages/EditNews";
+import NewsDetail from "./pages/NewsDetail"; // Import the new NewsDetail page
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,9 +32,10 @@ const App = () => (
             <Route path="/grupos-oracao" element={<GruposOracao />} />
             <Route path="/perfil" element={<Perfil />} />
             <Route path="/evento/:id" element={<EventDetail />} />
+            <Route path="/noticia/:id" element={<NewsDetail />} /> {/* New route for NewsDetail */}
             <Route path="/admin/criar-publicacao" element={<CreateNews />} />
-            <Route path="/admin/gerenciar-publicacoes" element={<ManageNews />} /> {/* New route for ManageNews */}
-            <Route path="/admin/editar-publicacao/:id" element={<EditNews />} />   {/* New route for EditNews */}
+            <Route path="/admin/gerenciar-publicacoes" element={<ManageNews />} />
+            <Route path="/admin/editar-publicacao/:id" element={<EditNews />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
