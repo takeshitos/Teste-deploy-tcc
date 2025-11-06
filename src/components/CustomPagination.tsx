@@ -29,8 +29,8 @@ export const CustomPagination = ({ currentPage, totalPages, onPageChange }: Cust
   }
 
   return (
-    <Pagination className="mb-4"> {/* Adicionado mb-4 para espaçamento abaixo da paginação */}
-      <PaginationContent className="flex-wrap space-x-1"> {/* Adicionado flex-wrap para permitir quebra de linha */}
+    <Pagination className="mb-4">
+      <PaginationContent className="flex-wrap space-x-1">
         <PaginationItem>
           <PaginationLink
             onClick={() => onPageChange(Math.max(1, currentPage - 1))}
