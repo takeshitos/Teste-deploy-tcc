@@ -6,11 +6,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, MapPin, Clock, DollarSign, QrCode, Whatsapp, CheckCircle } from "lucide-react";
+import { Calendar, MapPin, Clock, DollarSign, QrCode, CheckCircle } from "lucide-react"; // Removido Whatsapp
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import { Tables } from "@/integrations/supabase/types";
+import { Label } from "@/components/ui/label"; // Adicionado Label
+import { Input } from "@/components/ui/input"; // Adicionado Input
 
 type Evento = Tables<'eventos'>;
 type Inscricao = Tables<'inscricoes'>;
@@ -252,7 +254,7 @@ const EventDetail = () => {
               <div className="mt-8">
                 <Link to={event.whatsapp_link} target="_blank" rel="noopener noreferrer">
                   <Button className="w-full md:w-auto bg-[#25D366] hover:bg-[#1DA851] text-white font-semibold text-lg py-6 px-8 flex items-center gap-2">
-                    <Whatsapp className="h-6 w-6" />
+                    {/* <Whatsapp className="h-6 w-6" /> Removido o ícone Whatsapp */}
                     Falar no WhatsApp
                   </Button>
                 </Link>
