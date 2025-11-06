@@ -36,7 +36,9 @@ export const CustomPagination = ({ currentPage, totalPages, onPageChange }: Cust
           <PaginationPrevious
             onClick={() => onPageChange(Math.max(1, currentPage - 1))}
             className={currentPage === 1 ? "pointer-events-none opacity-50" : undefined}
-          />
+          >
+            Anterior
+          </PaginationPrevious>
         </PaginationItem>
 
         {startPage > 1 && (
@@ -80,7 +82,9 @@ export const CustomPagination = ({ currentPage, totalPages, onPageChange }: Cust
           <PaginationNext
             onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
             className={currentPage === totalPages ? "pointer-events-none opacity-50" : undefined}
-          />
+          >
+            Próximo
+          </PaginationNext>
         </PaginationItem>
       </PaginationContent>
     </Pagination>
