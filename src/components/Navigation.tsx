@@ -1,13 +1,27 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import rccLogo from "@/assets/rcc-logo.png";
+import { useAuth } from "@/contexts/AuthContext"; // Import useAuth
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { User as UserIcon } from "lucide-react";
 
-interface NavigationProps {
-  isAuthenticated?: boolean;
-  onLogout?: () => void;
-}
+export const Navigation = () => {
+  const { user, profile, signOut } = useAuth(); // Use useAuth hook
+  const navigate = useNavigate();
 
-export const Navigation = ({ isAuthenticated, onLogout }: NavigationProps) => {
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/");
+  };
+
   return (
     <nav className="bg-primary text-primary-foreground shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-4">
@@ -31,20 +45,37 @@ export const Navigation = ({ isAuthenticated, onLogout }: NavigationProps) => {
               Eventos
             </Link>
             
-            {isAuthenticated ? (
-              <>
-                <Link to="/perfil" className="text-sm font-medium hover:opacity-80 transition-opacity hidden md:block">
-                  Perfil
-                </Link>
-                <Button 
-                  variant="secondary" 
-                  size="sm"
-                  onClick={onLogout}
-                  className="bg-background text-foreground hover:bg-accent"
-                >
-                  Sair
-                </Button>
-              </>
+            {user && profile ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={profile.avatar_url || undefined} alt={profile.nome || "Usuário"} />
+                      <AvatarFallback className="bg-secondary text-secondary-foreground">
+                        {profile.nome ? profile.nome.charAt(0).toUpperCase() : <UserIcon className="h-5 w-5" />}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">{profile.nome}</p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {profile.email}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/perfil">Minha Conta</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>
+                    Sair
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <Link to="/auth">
                 <Button 

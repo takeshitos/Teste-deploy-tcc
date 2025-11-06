@@ -8,15 +8,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { CheckCircle, XCircle, Calendar } from "lucide-react";
+import { CheckCircle, XCircle, Calendar, User as UserIcon } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { v4 as uuidv4 } from 'uuid'; // Para gerar nomes de arquivo únicos
 
 interface Profile {
   nome: string;
   email: string;
   telefone: string | null;
   endereco: string | null;
+  avatar_url: string | null; // Adicionado avatar_url
 }
 
 interface Inscricao {
@@ -32,25 +35,32 @@ interface Inscricao {
 }
 
 const Perfil = () => {
-  const { user, signOut } = useAuth();
+  const { user, signOut, profile: authProfile, fetchUserProfile } = useAuth();
   const navigate = useNavigate();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [inscricoes, setInscricoes] = useState<Inscricao[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
   useEffect(() => {
     if (!user) {
       navigate("/auth");
       return;
     }
-    fetchProfile();
+    if (authProfile) {
+      setProfile(authProfile);
+      setLoading(false);
+    } else {
+      // Fallback if authProfile is not yet loaded, though AuthContext should handle it
+      fetchProfileData(); 
+    }
     fetchInscricoes();
-  }, [user, navigate]);
+  }, [user, navigate, authProfile]);
 
-  const fetchProfile = async () => {
+  const fetchProfileData = async () => {
     if (!user) return;
-    
+    setLoading(true);
     try {
       const { data } = await supabase
         .from("profiles")
@@ -63,6 +73,7 @@ const Perfil = () => {
       }
     } catch (error) {
       console.error("Error fetching profile:", error);
+      toast.error("Erro ao carregar perfil.");
     } finally {
       setLoading(false);
     }
@@ -93,6 +104,7 @@ const Perfil = () => {
       }
     } catch (error) {
       console.error("Error fetching inscriptions:", error);
+      toast.error("Erro ao carregar histórico de inscrições.");
     }
   };
 
@@ -107,17 +119,67 @@ const Perfil = () => {
           nome: profile.nome,
           telefone: profile.telefone,
           endereco: profile.endereco,
+          avatar_url: profile.avatar_url, // Incluir avatar_url
         })
         .eq("id", user.id);
 
       if (error) throw error;
       
       toast.success("Perfil atualizado com sucesso!");
+      fetchUserProfile(); // Re-fetch profile to update context
     } catch (error) {
       console.error("Error updating profile:", error);
       toast.error("Erro ao atualizar perfil");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!user || !event.target.files || event.target.files.length === 0) {
+      toast.error("Por favor, selecione uma imagem para upload.");
+      return;
+    }
+
+    setUploadingAvatar(true);
+    const file = event.target.files[0];
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${uuidv4()}.${fileExt}`;
+    const filePath = `${user.id}/${fileName}`; // Store in a folder named after the user's ID
+
+    try {
+      const { error: uploadError } = await supabase.storage
+        .from('avatars') // Certifique-se de que este bucket existe no Supabase
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false,
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicUrlData } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+      if (publicUrlData.publicUrl) {
+        const { error: updateError } = await supabase
+          .from('profiles')
+          .update({ avatar_url: publicUrlData.publicUrl })
+          .eq('id', user.id);
+
+        if (updateError) throw updateError;
+
+        setProfile((prevProfile) => prevProfile ? { ...prevProfile, avatar_url: publicUrlData.publicUrl } : null);
+        fetchUserProfile(); // Re-fetch profile to update context
+        toast.success("Foto de perfil atualizada com sucesso!");
+      } else {
+        throw new Error("Não foi possível obter a URL pública da imagem.");
+      }
+    } catch (error: any) {
+      console.error("Error uploading avatar:", error);
+      toast.error(`Erro ao fazer upload da foto: ${error.message || 'Tente novamente.'}`);
+    } finally {
+      setUploadingAvatar(false);
     }
   };
 
@@ -152,6 +214,26 @@ const Perfil = () => {
                 <CardTitle>Informações Pessoais</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div className="flex flex-col items-center gap-4 mb-6">
+                  <Avatar className="h-24 w-24">
+                    <AvatarImage src={profile.avatar_url || undefined} alt={profile.nome} />
+                    <AvatarFallback className="bg-primary text-primary-foreground text-2xl">
+                      {profile.nome ? profile.nome.charAt(0).toUpperCase() : <UserIcon className="h-12 w-12" />}
+                    </AvatarFallback>
+                  </Avatar>
+                  <Label htmlFor="avatar-upload" className="cursor-pointer text-primary hover:underline">
+                    {uploadingAvatar ? "Enviando..." : "Alterar Foto de Perfil"}
+                  </Label>
+                  <Input
+                    id="avatar-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleAvatarUpload}
+                    className="hidden"
+                    disabled={uploadingAvatar}
+                  />
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="nome">Nome Completo</Label>
                   <Input
@@ -185,7 +267,7 @@ const Perfil = () => {
                     onChange={(e) => setProfile({ ...profile, endereco: e.target.value })}
                   />
                 </div>
-                <Button onClick={handleSave} disabled={saving} className="w-full">
+                <Button onClick={handleSave} disabled={saving || uploadingAvatar} className="w-full">
                   {saving ? "Salvando..." : "Salvar Alterações"}
                 </Button>
               </CardContent>
