@@ -20,6 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { v4 as uuidv4 } from 'uuid';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { ExportRegistrationsPdf } from "@/components/ExportRegistrationsPdf"; // Importar o novo componente
 
 type Evento = Tables<'eventos'>;
 type Inscricao = Tables<'inscricoes'>;
@@ -50,7 +51,7 @@ const baseRegistrationFormSchema = z.object({
 const EventDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { user, signOut, loading: authLoading, profile: userProfile } = useAuth();
+  const { user, loading: authLoading, profile: userProfile } = useAuth(); // Removido signOut, não usado aqui
   const [event, setEvent] = useState<Evento | null>(null);
   const [loading, setLoading] = useState(true);
   const [isRegistered, setIsRegistered] = useState(false);
@@ -74,6 +75,9 @@ const EventDetail = () => {
       precisa_pouso: false,
     },
   });
+
+  // Check if user is admin or coordenador
+  const isAdminOrCoordenador = userProfile?.role === 'admin' || userProfile?.role === 'coordenador';
 
   useEffect(() => {
     if (!id) {
@@ -352,6 +356,12 @@ const EventDetail = () => {
                 <p className="text-muted-foreground leading-relaxed">{event.descricao}</p>
               </div>
             </div>
+
+            {isAdminOrCoordenador && event.id && event.nome && (
+              <div className="mb-8">
+                <ExportRegistrationsPdf eventId={event.id} eventName={event.nome} />
+              </div>
+            )}
 
             {!isRegistrationOpen ? (
               <div className="flex items-center gap-3 text-lg font-semibold text-destructive bg-destructive/10 p-4 rounded-lg">
