@@ -6,7 +6,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import heroPrayer from "@/assets/hero-prayer.jpg";
 import eventFormacao from "@/assets/event-formacao.jpg";
-import rccLogo from "@/assets/logo_rcc.png"; // Importando a logo
 
 interface Evento {
   id: string;
@@ -84,12 +83,9 @@ const Home = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-primary/80 to-primary/60"></div>
         </div>
         <div className="relative z-10 text-center text-primary-foreground px-4 max-w-4xl mx-auto">
-          {/* Substituindo o texto pela logo */}
-          <img 
-            src={rccLogo} 
-            alt="RCC Logo" 
-            className="mx-auto mb-6 h-24 md:h-32 lg:h-40 w-auto filter brightness-0 invert" 
-          />
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">
+            Renovação Carismática Católica
+          </h1>
           <p className="text-lg md:text-xl opacity-95 italic max-w-2xl mx-auto leading-relaxed">
             "Cumpre em mim o Teu querer. Faça o que está no Teu coração. E que a cada dia eu queira mais e mais estar ao Teu lado, Senhor"
           </p>
