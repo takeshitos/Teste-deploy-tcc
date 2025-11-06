@@ -23,7 +23,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { Enums, TablesInsert } from "@/integrations/supabase/types"; // Importar TablesInsert
+import { Enums, TablesInsert } from "@/integrations/supabase/types";
 
 // Define os tipos de evento disponíveis
 const eventTypes: Enums<'event_type'>[] = [
@@ -171,7 +171,7 @@ const CreateEvent = () => {
         horario: restOfValues.horario,
         local: restOfValues.local,
         taxa_inscricao: restOfValues.taxa_inscricao,
-        tipo: restOfValues.tipo,
+        tipo: values.tipo, // Corrigido: usando values.tipo diretamente
         imagem_url: restOfValues.imagem_url,
         obrigatorio: restOfValues.obrigatorio,
         chave_pix: restOfValues.chave_pix,

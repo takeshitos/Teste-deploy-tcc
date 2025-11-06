@@ -59,7 +59,8 @@ const EventDetail = () => {
   const [isUploadingProof, setIsUploadingProof] = useState(false);
   const [registrationId, setRegistrationId] = useState<string | null>(null); // Para armazenar o ID da inscrição
 
-  const [dynamicFormSchema, setDynamicFormSchema] = useState(baseRegistrationFormSchema);
+  // Alterado o tipo do useState para ZodSchema<any> para maior flexibilidade
+  const [dynamicFormSchema, setDynamicFormSchema] = useState<z.ZodSchema<any>>(baseRegistrationFormSchema);
 
   const form = useForm<z.infer<typeof baseRegistrationFormSchema>>({
     resolver: zodResolver(dynamicFormSchema),
@@ -86,7 +87,7 @@ const EventDetail = () => {
     if (event?.form_fields_config) {
       const config = event.form_fields_config as Record<string, { required: boolean }>;
 
-      // Start with a base schema where all fields are optional
+      // Start with a base schema shape
       let currentSchemaShape: { [key: string]: z.ZodTypeAny } = {
         nome: z.string().optional(),
         telefone: z.string().optional(),
@@ -114,8 +115,10 @@ const EventDetail = () => {
       let finalSchema = z.object(currentSchemaShape);
 
       // Conditional requirement for telefone_responsavel
-      finalSchema = finalSchema.superRefine((data, ctx) => {
-        if (config.telefone_responsavel?.required && data.idade !== undefined && data.idade < 18 && !data.telefone_responsavel) {
+      // Atribua o resultado do superRefine a uma nova variável ou diretamente ao estado
+      const schemaWithRefinement = finalSchema.superRefine((data, ctx) => {
+        const idadeValue = form.getValues("idade"); 
+        if (config.telefone_responsavel?.required && idadeValue !== undefined && idadeValue < 18 && !data.telefone_responsavel) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: "Telefone do responsável é obrigatório para menores de 18 anos.",
@@ -124,7 +127,7 @@ const EventDetail = () => {
         }
       });
 
-      setDynamicFormSchema(finalSchema);
+      setDynamicFormSchema(schemaWithRefinement); // Atribuição corrigida
     }
   }, [event, form]);
 
