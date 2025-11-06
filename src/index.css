@@ -19,11 +19,11 @@ All colors MUST be HSL.
     --popover-foreground: 160 50% 15%;
 
     /* Primary: Deep RCC Green */
-    --primary: 150 100% 19%; /* Changed to #006036 */
+    --primary: 160 55% 35%;
     --primary-foreground: 0 0% 100%;
     
     /* Primary Hover: Slightly darker green */
-    --primary-hover: 150 100% 15%; /* Adjusted for hover */
+    --primary-hover: 160 60% 28%;
 
     /* Secondary: Vibrant Yellow for CTAs */
     --secondary: 47 100% 50%; /* Changed to #fdc800 */
@@ -76,10 +76,10 @@ All colors MUST be HSL.
     --popover: 160 25% 12%;
     --popover-foreground: 42 25% 95%;
 
-    --primary: 150 100% 25%; /* Changed to #006036 for dark theme */
+    --primary: 160 50% 45%;
     --primary-foreground: 0 0% 100%;
     
-    --primary-hover: 150 100% 20%; /* Adjusted for hover */
+    --primary-hover: 160 55% 38%;
 
     /* Secondary: Vibrant Yellow for CTAs */
     --secondary: 47 100% 62%; /* Changed to #fdc800 for dark theme */
