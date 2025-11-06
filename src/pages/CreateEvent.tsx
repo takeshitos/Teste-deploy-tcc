@@ -25,14 +25,14 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { Enums, TablesInsert } from "@/integrations/supabase/types";
 
-// Define os tipos de evento disponíveis
-const eventTypes: Enums<'event_type'>[] = [
+// Define os tipos de evento disponíveis como um 'const' array para inferência de literais
+const eventTypes = [
   "formacao",
   "retiro",
   "reuniao",
   "experiencia_oracao",
   "introducao_dons",
-];
+] as const; // Adicionado 'as const' aqui
 
 // Define os campos de formulário de inscrição pré-definidos
 const predefinedFormFields = [
@@ -55,7 +55,7 @@ const formSchema = z.object({
     (val) => (val === "" ? undefined : Number(val)),
     z.number().min(0, { message: "A taxa de inscrição não pode ser negativa." }).optional()
   ),
-  tipo: z.enum(eventTypes as [string, ...string[]], { required_error: "O tipo do evento é obrigatório." }),
+  tipo: z.enum(eventTypes, { required_error: "O tipo do evento é obrigatório." }), // Usando eventTypes diretamente
   imagem_file: z.any().optional(), // File object for upload
   imagem_url: z.string().optional().nullable(), // URL after upload
   obrigatorio: z.boolean().default(false),
