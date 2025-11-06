@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import rccLogo from "@/assets/Logo_RCC.png";
+import rccLogo from "@/assets/logo_rcc.png"; // Updated to use the new logo
 import { useAuth } from "@/contexts/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -27,7 +27,9 @@ export const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           <Link to="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
-            <img src={rccLogo} alt="RCC Logo" className="h-16 w-auto" /> {/* Alterado de h-12 para h-16 */}
+            <div className="bg-white p-2 rounded-lg flex items-center justify-center"> {/* Added white background and rounded borders */}
+              <img src={rccLogo} alt="RCC Logo" className="h-12 w-auto" /> {/* Adjusted size to fit better */}
+            </div>
             <div className="hidden sm:block">
               <span className="text-sm font-medium block">Renovação Carismática Católica</span>
               <span className="text-xs opacity-90">Diocese de Cornélio Procópio</span>
