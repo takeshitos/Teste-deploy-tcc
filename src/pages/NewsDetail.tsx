@@ -99,6 +99,7 @@ const NewsDetail = () => {
               button_text={newsItem.button_text}
               button_link={newsItem.button_link}
               showFullContent={true} // Exibir o conteúdo completo
+              // imageOnRight removido, pois não faz sentido para um único item
             />
           </CardContent>
         </Card>

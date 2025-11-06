@@ -6,6 +6,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import heroPrayer from "@/assets/hero-prayer.jpg";
 import eventFormacao from "@/assets/event-formacao.jpg";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CustomPagination } from "@/components/CustomPagination"; // Importar o novo componente de paginação
 
 interface Evento {
   id: string;
@@ -25,21 +27,25 @@ interface Noticia {
   conteudo: string;
   imagem_url: string | null;
   created_at: string;
-  button_text: string | null; // Adicionado button_text
-  button_link: string | null; // Adicionado button_link
+  button_text: string | null;
+  button_link: string | null;
 }
 
 const Home = () => {
   const { user, signOut } = useAuth();
   const [eventos, setEventos] = useState<Evento[]>([]);
-  const [noticias, setNoticias] = useState<Noticia[]>([]);
+  const [latestNews, setLatestNews] = useState<Noticia[]>([]); // Para a aba "Últimas Notícias"
+  const [allNews, setAllNews] = useState<Noticia[]>([]); // Para a aba "Todos os Comunicados"
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const newsPerPage = 4; // 4 comunicados por aba
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       // Fetch upcoming events
       const { data: eventosData } = await supabase
@@ -53,22 +59,43 @@ const Home = () => {
         setEventos(eventosData);
       }
 
-      // Fetch published news
-      const { data: noticiasData } = await supabase
+      // Fetch latest news for the "Últimas Notícias" tab
+      const { data: latestNewsData } = await supabase
         .from("noticias")
-        .select("id, titulo, conteudo, imagem_url, created_at, button_text, button_link") // Incluir created_at, button_text, button_link
+        .select("id, titulo, conteudo, imagem_url, created_at, button_text, button_link")
         .eq("publicado", true)
         .order("created_at", { ascending: false })
-        .limit(2);
+        .limit(3); // Limite para as últimas notícias
 
-      if (noticiasData) {
-        setNoticias(noticiasData);
+      if (latestNewsData) {
+        setLatestNews(latestNewsData);
+      }
+
+      // Fetch ALL published news for the "Todos os Comunicados" tab
+      const { data: allNewsData } = await supabase
+        .from("noticias")
+        .select("id, titulo, conteudo, imagem_url, created_at, button_text, button_link")
+        .eq("publicado", true)
+        .order("created_at", { ascending: false });
+
+      if (allNewsData) {
+        setAllNews(allNewsData);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  // Lógica de paginação para "Todos os Comunicados"
+  const indexOfLastNews = currentPage * newsPerPage;
+  const indexOfFirstNews = indexOfLastNews - newsPerPage;
+  const currentPaginatedNews = allNews.slice(indexOfFirstNews, indexOfLastNews);
+  const totalPages = Math.ceil(allNews.length / newsPerPage);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
   };
 
   return (
@@ -122,16 +149,63 @@ const Home = () => {
       </section>
 
       {/* News Section */}
-      {noticias.length > 0 && (
-        <section className="container mx-auto px-4 py-16">
-          <h2 className="text-3xl font-bold text-foreground mb-8">Notícias e Comunicados</h2>
-          <div className="space-y-6">
-            {noticias.map((noticia, index) => (
-              <NewsCard key={noticia.id} {...noticia} imageOnRight={index % 2 !== 0} />
-            ))}
-          </div>
-        </section>
-      )}
+      <section className="container mx-auto px-4 py-16">
+        <h2 className="text-3xl font-bold text-foreground mb-8">Notícias e Comunicados</h2>
+        
+        <Tabs defaultValue="latest">
+          <TabsList className="mb-8 grid w-full grid-cols-2 md:w-auto">
+            <TabsTrigger value="latest">Últimas Notícias</TabsTrigger>
+            <TabsTrigger value="all">Todos os Comunicados</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="latest">
+            {loading ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">Carregando notícias...</p>
+              </div>
+            ) : latestNews.length > 0 ? (
+              <div className="space-y-6">
+                {latestNews.map((noticia, index) => (
+                  <NewsCard key={noticia.id} {...noticia} imageOnRight={index % 2 !== 0} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 bg-muted rounded-lg">
+                <p className="text-muted-foreground">Nenhuma notícia recente encontrada.</p>
+              </div>
+            )}
+          </TabsContent>
+          
+          <TabsContent value="all">
+            {loading ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">Carregando comunicados...</p>
+              </div>
+            ) : allNews.length > 0 ? (
+              <>
+                <div className="space-y-6">
+                  {currentPaginatedNews.map((noticia, index) => (
+                    <NewsCard key={noticia.id} {...noticia} imageOnRight={index % 2 !== 0} />
+                  ))}
+                </div>
+                {totalPages > 1 && (
+                  <div className="mt-8 flex justify-center">
+                    <CustomPagination
+                      currentPage={currentPage}
+                      totalPages={totalPages}
+                      onPageChange={handlePageChange}
+                    />
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="text-center py-12 bg-muted rounded-lg">
+                <p className="text-muted-foreground">Nenhum comunicado encontrado.</p>
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
+      </section>
 
       {/* Footer */}
       <footer className="bg-primary text-primary-foreground py-12 mt-16">
