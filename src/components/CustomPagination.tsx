@@ -30,12 +30,12 @@ export const CustomPagination = ({ currentPage, totalPages, onPageChange }: Cust
 
   return (
     <Pagination>
-      <PaginationContent>
+      <PaginationContent className="space-x-1"> {/* Adicionado space-x-1 para espaçamento entre os itens */}
         <PaginationItem>
           <PaginationLink
             onClick={() => onPageChange(Math.max(1, currentPage - 1))}
             className={cn(
-              "gap-1 pl-2.5",
+              "flex items-center gap-1 px-3", // Garantir flex e padding consistente
               currentPage === 1 ? "pointer-events-none opacity-50" : undefined
             )}
             aria-label="Ir para a página anterior"
@@ -86,7 +86,7 @@ export const CustomPagination = ({ currentPage, totalPages, onPageChange }: Cust
           <PaginationLink
             onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
             className={cn(
-              "gap-1 pr-2.5",
+              "flex items-center gap-1 px-3", // Garantir flex e padding consistente
               currentPage === totalPages ? "pointer-events-none opacity-50" : undefined
             )}
             aria-label="Ir para a próxima página"
