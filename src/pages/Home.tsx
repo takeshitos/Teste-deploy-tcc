@@ -24,6 +24,7 @@ interface Noticia {
   titulo: string;
   conteudo: string;
   imagem_url: string | null;
+  created_at: string; // Adicionado created_at
 }
 
 const Home = () => {
@@ -53,7 +54,7 @@ const Home = () => {
       // Fetch published news
       const { data: noticiasData } = await supabase
         .from("noticias")
-        .select("*")
+        .select("id, titulo, conteudo, imagem_url, created_at") // Incluir created_at
         .eq("publicado", true)
         .order("created_at", { ascending: false })
         .limit(2);
