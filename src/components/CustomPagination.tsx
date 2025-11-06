@@ -5,8 +5,8 @@ import {
   PaginationItem,
   PaginationLink,
 } from "@/components/ui/pagination";
-import { ChevronLeft, ChevronRight } from "lucide-react"; // Importar ícones
-import { cn } from "@/lib/utils"; // Importar cn para combinar classes
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface CustomPaginationProps {
   currentPage: number;
@@ -29,13 +29,13 @@ export const CustomPagination = ({ currentPage, totalPages, onPageChange }: Cust
   }
 
   return (
-    <Pagination>
-      <PaginationContent className="space-x-1"> {/* Adicionado space-x-1 para espaçamento entre os itens */}
+    <Pagination className="mb-4"> {/* Adicionado mb-4 para espaçamento abaixo da paginação */}
+      <PaginationContent className="flex-wrap space-x-1"> {/* Adicionado flex-wrap para permitir quebra de linha */}
         <PaginationItem>
           <PaginationLink
             onClick={() => onPageChange(Math.max(1, currentPage - 1))}
             className={cn(
-              "flex items-center gap-1 h-9 px-3 py-2", // Garantir flex, padding e altura consistente
+              "flex items-center gap-1 h-9 px-3 py-2",
               currentPage === 1 ? "pointer-events-none opacity-50" : undefined
             )}
             aria-label="Ir para a página anterior"
@@ -63,7 +63,7 @@ export const CustomPagination = ({ currentPage, totalPages, onPageChange }: Cust
             <PaginationLink
               onClick={() => onPageChange(number)}
               isActive={number === currentPage}
-              className="h-9 px-3 py-2" // Garantir padding e altura consistente
+              className="h-9 px-3 py-2"
             >
               {number}
             </PaginationLink>
@@ -87,7 +87,7 @@ export const CustomPagination = ({ currentPage, totalPages, onPageChange }: Cust
           <PaginationLink
             onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
             className={cn(
-              "flex items-center gap-1 h-9 px-3 py-2", // Garantir flex, padding e altura consistente
+              "flex items-center gap-1 h-9 px-3 py-2",
               currentPage === totalPages ? "pointer-events-none opacity-50" : undefined
             )}
             aria-label="Ir para a próxima página"
