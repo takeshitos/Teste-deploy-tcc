@@ -24,7 +24,9 @@ interface Noticia {
   titulo: string;
   conteudo: string;
   imagem_url: string | null;
-  created_at: string; // Adicionado created_at
+  created_at: string;
+  button_text: string | null; // Adicionado button_text
+  button_link: string | null; // Adicionado button_link
 }
 
 const Home = () => {
@@ -54,7 +56,7 @@ const Home = () => {
       // Fetch published news
       const { data: noticiasData } = await supabase
         .from("noticias")
-        .select("id, titulo, conteudo, imagem_url, created_at") // Incluir created_at
+        .select("id, titulo, conteudo, imagem_url, created_at, button_text, button_link") // Incluir created_at, button_text, button_link
         .eq("publicado", true)
         .order("created_at", { ascending: false })
         .limit(2);
@@ -124,8 +126,8 @@ const Home = () => {
         <section className="container mx-auto px-4 py-16">
           <h2 className="text-3xl font-bold text-foreground mb-8">Notícias e Comunicados</h2>
           <div className="space-y-6">
-            {noticias.map((noticia) => (
-              <NewsCard key={noticia.id} {...noticia} />
+            {noticias.map((noticia, index) => (
+              <NewsCard key={noticia.id} {...noticia} imageOnRight={index % 2 !== 0} />
             ))}
           </div>
         </section>
