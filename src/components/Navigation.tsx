@@ -66,9 +66,14 @@ export const Navigation = () => {
         )}
 
         {isAdminOrCoordenador && (
-          <RouterNavLink to="/admin/gerenciar-publicacoes" className={navLinkClass}>
-            Gerenciar Publicações
-          </RouterNavLink>
+          <>
+            <RouterNavLink to="/admin/gerenciar-publicacoes" className={navLinkClass}>
+              Gerenciar Publicações
+            </RouterNavLink>
+            <RouterNavLink to="/admin/criar-evento" className={navLinkClass}>
+              Criar Evento
+            </RouterNavLink>
+          </>
         )}
       </div>
 
@@ -100,9 +105,14 @@ export const Navigation = () => {
               )}
 
               {isAdminOrCoordenador && (
-                <RouterNavLink to="/admin/gerenciar-publicacoes" className={mobileNavLinkClass}>
-                  Gerenciar Publicações
-                </RouterNavLink>
+                <>
+                  <RouterNavLink to="/admin/gerenciar-publicacoes" className={mobileNavLinkClass}>
+                    Gerenciar Publicações
+                  </RouterNavLink>
+                  <RouterNavLink to="/admin/criar-evento" className={mobileNavLinkClass}>
+                    Criar Evento
+                  </RouterNavLink>
+                </>
               )}
               <div className="mt-4 border-t pt-4">
                 {user ? (
@@ -156,6 +166,9 @@ export const Navigation = () => {
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link to="/admin/gerenciar-publicacoes">Gerenciar Publicações</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin/criar-evento">Criar Evento</Link>
                   </DropdownMenuItem>
                 </>
               )}

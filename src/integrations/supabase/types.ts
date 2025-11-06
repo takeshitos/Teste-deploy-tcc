@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       eventos: {
         Row: {
+          autor_id: string | null // Adicionado
           chave_pix: string | null
           created_at: string
           data: string
@@ -31,8 +32,11 @@ export type Database = {
           tipo: Database["public"]["Enums"]["event_type"]
           updated_at: string
           whatsapp_link: string | null
+          form_fields_config: Json | null
+          registration_deadline: string | null
         }
         Insert: {
+          autor_id?: string | null // Adicionado
           chave_pix?: string | null
           created_at?: string
           data: string
@@ -48,8 +52,11 @@ export type Database = {
           tipo: Database["public"]["Enums"]["event_type"]
           updated_at?: string
           whatsapp_link?: string | null
+          form_fields_config?: Json | null
+          registration_deadline?: string | null
         }
         Update: {
+          autor_id?: string | null // Adicionado
           chave_pix?: string | null
           created_at?: string
           data?: string
@@ -65,6 +72,8 @@ export type Database = {
           tipo?: Database["public"]["Enums"]["event_type"]
           updated_at?: string
           whatsapp_link?: string | null
+          form_fields_config?: Json | null
+          registration_deadline?: string | null
         }
         Relationships: []
       }
@@ -110,6 +119,7 @@ export type Database = {
           id: string
           presente: boolean | null
           user_id: string
+          comprovante_url: string | null
         }
         Insert: {
           confirmado?: boolean | null
@@ -119,6 +129,7 @@ export type Database = {
           id?: string
           presente?: boolean | null
           user_id: string
+          comprovante_url?: string | null
         }
         Update: {
           confirmado?: boolean | null
@@ -128,6 +139,7 @@ export type Database = {
           id?: string
           presente?: boolean | null
           user_id?: string
+          comprovante_url?: string | null
         }
         Relationships: [
           {
@@ -156,8 +168,8 @@ export type Database = {
           publicado: boolean | null
           titulo: string
           updated_at: string
-          button_text: string | null // New column
-          button_link: string | null // New column
+          button_text: string | null
+          button_link: string | null
         }
         Insert: {
           autor_id?: string | null
@@ -168,8 +180,8 @@ export type Database = {
           publicado?: boolean | null
           titulo: string
           updated_at?: string
-          button_text?: string | null // New column
-          button_link?: string | null // New column
+          button_text?: string | null
+          button_link?: string | null
         }
         Update: {
           autor_id?: string | null
@@ -180,8 +192,8 @@ export type Database = {
           publicado?: boolean | null
           titulo?: string
           updated_at?: string
-          button_text?: string | null // New column
-          button_link?: string | null // New column
+          button_text?: string | null
+          button_link?: string | null
         }
         Relationships: [
           {

@@ -13,7 +13,8 @@ import EventDetail from "./pages/EventDetail";
 import CreateNews from "./pages/CreateNews";
 import ManageNews from "./pages/ManageNews";
 import EditNews from "./pages/EditNews";
-import NewsDetail from "./pages/NewsDetail"; // Import the new NewsDetail page
+import NewsDetail from "./pages/NewsDetail";
+import CreateEvent from "./pages/CreateEvent"; // Import the new CreateEvent page
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,10 +33,11 @@ const App = () => (
             <Route path="/grupos-oracao" element={<GruposOracao />} />
             <Route path="/perfil" element={<Perfil />} />
             <Route path="/evento/:id" element={<EventDetail />} />
-            <Route path="/noticia/:id" element={<NewsDetail />} /> {/* New route for NewsDetail */}
+            <Route path="/noticia/:id" element={<NewsDetail />} />
             <Route path="/admin/criar-publicacao" element={<CreateNews />} />
             <Route path="/admin/gerenciar-publicacoes" element={<ManageNews />} />
             <Route path="/admin/editar-publicacao/:id" element={<EditNews />} />
+            <Route path="/admin/criar-evento" element={<CreateEvent />} /> {/* New route for CreateEvent */}
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
