@@ -156,6 +156,8 @@ export type Database = {
           publicado: boolean | null
           titulo: string
           updated_at: string
+          button_text: string | null // New column
+          button_link: string | null // New column
         }
         Insert: {
           autor_id?: string | null
@@ -166,6 +168,8 @@ export type Database = {
           publicado?: boolean | null
           titulo: string
           updated_at?: string
+          button_text?: string | null // New column
+          button_link?: string | null // New column
         }
         Update: {
           autor_id?: string | null
@@ -176,6 +180,8 @@ export type Database = {
           publicado?: boolean | null
           titulo?: string
           updated_at?: string
+          button_text?: string | null // New column
+          button_link?: string | null // New column
         }
         Relationships: [
           {

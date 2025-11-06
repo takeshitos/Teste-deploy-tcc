@@ -8,6 +8,8 @@ interface NewsCardProps {
   conteudo: string;
   imagem_url?: string;
   showFullContent?: boolean;
+  button_text?: string | null; // New prop for button text
+  button_link?: string | null; // New prop for button link
 }
 
 export const NewsCard = ({ 
@@ -15,8 +17,12 @@ export const NewsCard = ({
   titulo, 
   conteudo, 
   imagem_url,
-  showFullContent = false 
+  showFullContent = false,
+  button_text, // Destructure new props
+  button_link, // Destructure new props
 }: NewsCardProps) => {
+  const hasButton = button_text && button_link;
+
   return (
     <Card className="bg-primary text-primary-foreground overflow-hidden hover:shadow-xl transition-shadow">
       <div className="flex flex-col md:flex-row">
@@ -30,13 +36,22 @@ export const NewsCard = ({
           <p className={`text-sm opacity-90 mb-4 ${!showFullContent && 'line-clamp-3'}`}>
             {conteudo}
           </p>
-          {!showFullContent && (
-            <Link to={`/noticia/${id}`}>
-              <Button variant="secondary" size="sm" className="bg-background text-foreground hover:bg-accent">
-                Ler mais
-              </Button>
-            </Link>
-          )}
+          <div className="flex flex-wrap gap-2">
+            {!showFullContent && (
+              <Link to={`/noticia/${id}`}>
+                <Button variant="secondary" size="sm" className="bg-background text-foreground hover:bg-accent">
+                  Ler mais
+                </Button>
+              </Link>
+            )}
+            {hasButton && (
+              <a href={button_link} target="_blank" rel="noopener noreferrer">
+                <Button variant="secondary" size="sm" className="bg-secondary text-secondary-foreground hover:bg-secondary-hover">
+                  {button_text}
+                </Button>
+              </a>
+            )}
+          </div>
         </CardContent>
       </div>
     </Card>

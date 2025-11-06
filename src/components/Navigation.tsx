@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import rccLogo from "@/assets/logo_rcc.png"; // Importando a nova logo
+import rccLogo from "@/assets/logo_rcc.png";
 import { useAuth } from "@/contexts/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -22,11 +22,14 @@ export const Navigation = () => {
     navigate("/");
   };
 
+  // Check if the user has 'admin' or 'coordenador' role
+  const isAdminOrCoordenador = profile?.role === 'admin' || profile?.role === 'coordenador';
+
   return (
     <nav className="bg-primary text-primary-foreground shadow-lg sticky top-0 z-50 h-20 flex items-center justify-between">
       {/* Logo da Aplicação */}
       <Link to="/" className="flex items-center gap-3 h-full bg-white px-4 rounded-r-lg hover:opacity-90 transition-opacity">
-        <img src={rccLogo} alt="RCC Logo" className="h-16 w-auto" /> {/* Usando a nova logo */}
+        <img src={rccLogo} alt="RCC Logo" className="h-16 w-auto" />
       </Link>
       
       {/* Links de Navegação e Menu do Usuário */}
@@ -41,6 +44,12 @@ export const Navigation = () => {
           Eventos
         </Link>
         
+        {isAdminOrCoordenador && (
+          <Link to="/admin/criar-publicacao" className="text-sm font-medium hover:opacity-80 transition-opacity hidden md:block">
+            Criar Publicação
+          </Link>
+        )}
+
         {user && profile ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -66,6 +75,11 @@ export const Navigation = () => {
               <DropdownMenuItem asChild>
                 <Link to="/perfil">Minha Conta</Link>
               </DropdownMenuItem>
+              {isAdminOrCoordenador && (
+                <DropdownMenuItem asChild>
+                  <Link to="/admin/criar-publicacao">Criar Publicação</Link>
+                </DropdownMenuItem>
+              )}
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout}>
                 Sair
