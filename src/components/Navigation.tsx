@@ -11,8 +11,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User as UserIcon } from "lucide-react";
-import { cn } from "@/lib/utils"; // Importar cn para combinar classes
+import { User as UserIcon, Menu } from "lucide-react"; // Import Menu icon
+import { cn } from "@/lib/utils";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"; // Import Sheet components
 
 export const Navigation = () => {
   const { user, profile, signOut } = useAuth();
@@ -32,6 +33,13 @@ export const Navigation = () => {
       isActive && "border-b-2 border-current" // Adiciona sublinhado se o link estiver ativo
     );
 
+  // Mobile nav link class - slightly different styling for vertical menu
+  const mobileNavLinkClass = ({ isActive }: { isActive: boolean }) =>
+    cn(
+      "block px-4 py-2 text-lg font-medium hover:bg-accent hover:text-accent-foreground rounded-md transition-colors",
+      isActive && "bg-accent text-accent-foreground"
+    );
+
   return (
     <nav className="bg-primary text-primary-foreground shadow-lg sticky top-0 z-50 h-20 flex items-center justify-between">
       {/* Logo da Aplicação - LEFT */}
@@ -39,8 +47,8 @@ export const Navigation = () => {
         <img src={rccLogo} alt="RCC Logo" className="h-16 w-auto" />
       </Link>
       
-      {/* Links de Navegação - CENTER */}
-      <div className="flex-grow flex justify-center items-center gap-6">
+      {/* Desktop Navigation Links - CENTER (hidden on small screens) */}
+      <div className="hidden md:flex flex-grow justify-center items-center gap-6">
         <RouterNavLink to="/" className={navLinkClass}>
           Início
         </RouterNavLink>
@@ -58,13 +66,63 @@ export const Navigation = () => {
         )}
 
         {isAdminOrCoordenador && (
-          <RouterNavLink to="/admin/gerenciar-publicacoes" className={cn(navLinkClass, "hidden md:block")}>
+          <RouterNavLink to="/admin/gerenciar-publicacoes" className={navLinkClass}>
             Gerenciar Publicações
           </RouterNavLink>
         )}
       </div>
 
-      {/* Menu do Usuário / Botão ENTRAR - RIGHT */}
+      {/* Mobile Navigation Menu - LEFT (visible on small screens) */}
+      <div className="md:hidden flex items-center ml-4"> {/* Added ml-4 for spacing */}
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="text-primary-foreground"> {/* Changed text color for icon */}
+              <Menu className="h-6 w-6" />
+              <span className="sr-only">Abrir menu de navegação</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-[250px] sm:w-[300px] bg-background text-foreground">
+            <div className="flex flex-col gap-2 pt-6">
+              <RouterNavLink to="/" className={mobileNavLinkClass}>
+                Início
+              </RouterNavLink>
+              <RouterNavLink to="/eventos" className={mobileNavLinkClass}>
+                Eventos
+              </RouterNavLink>
+              <RouterNavLink to="/grupos-oracao" className={mobileNavLinkClass}>
+                Grupos de Oração
+              </RouterNavLink>
+              
+              {user && (
+                <RouterNavLink to="/perfil" className={mobileNavLinkClass}>
+                  Perfil
+                </RouterNavLink>
+              )}
+
+              {isAdminOrCoordenador && (
+                <RouterNavLink to="/admin/gerenciar-publicacoes" className={mobileNavLinkClass}>
+                  Gerenciar Publicações
+                </RouterNavLink>
+              )}
+              <div className="mt-4 border-t pt-4">
+                {user ? (
+                  <Button onClick={handleLogout} variant="ghost" className="w-full justify-start text-lg">
+                    Sair
+                  </Button>
+                ) : (
+                  <Link to="/auth">
+                    <Button className="w-full text-lg">
+                      Entrar
+                    </Button>
+                  </Link>
+                )}
+              </div>
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      {/* User Menu / Botão ENTRAR - RIGHT */}
       <div className="flex items-center pr-4">
         {user && profile ? (
           <DropdownMenu>
