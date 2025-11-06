@@ -148,6 +148,25 @@ const Perfil = () => {
     const filePath = `${user.id}/${fileName}`; // Store in a folder named after the user's ID
 
     try {
+      // 1. Delete old avatar if it exists
+      if (profile?.avatar_url) {
+        // Extract the path from the full URL
+        const oldAvatarPath = profile.avatar_url.split('/public/avatars/')[1];
+        if (oldAvatarPath) {
+          const { error: deleteError } = await supabase.storage
+            .from('avatars')
+            .remove([oldAvatarPath]);
+
+          if (deleteError) {
+            console.warn("Erro ao excluir avatar antigo:", deleteError.message);
+            // Não lançar erro, apenas avisar, pois o novo upload deve continuar
+          } else {
+            console.log("Avatar antigo excluído com sucesso:", oldAvatarPath);
+          }
+        }
+      }
+
+      // 2. Upload new avatar
       const { error: uploadError } = await supabase.storage
         .from('avatars') // Certifique-se de que este bucket existe no Supabase
         .upload(filePath, file, {
