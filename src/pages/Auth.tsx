@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom"; // Importar useSearchParams
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,10 +25,23 @@ const forgotPasswordSchema = z.object({
   email: z.string().email({ message: "Email inválido" }),
 });
 
+// Novo schema para redefinição de senha
+const resetPasswordSchema = z.object({
+  newPassword: z.string().min(6, { message: "A nova senha deve ter no mínimo 6 caracteres." }),
+  confirmNewPassword: z.string(),
+}).refine((data) => data.newPassword === data.confirmNewPassword, {
+  message: "As senhas não coincidem.",
+  path: ["confirmNewPassword"],
+});
+
 const Auth = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams(); // Hook para ler parâmetros da URL
+  const isRecoveryMode = searchParams.get("type") === "recovery"; // Verifica se está no modo de recuperação
+
   const [loading, setLoading] = useState(false);
-  const [showForgotPassword, setShowForgotPassword] = useState(false); // Novo estado para controlar a exibição do formulário de recuperação
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [showResetPasswordForm, setShowResetPasswordForm] = useState(false); // Novo estado para o formulário de nova senha
   
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const [signupData, setSignupData] = useState({
@@ -38,7 +51,18 @@ const Auth = () => {
     telefone: "",
     endereco: "",
   });
-  const [forgotPasswordEmail, setForgotPasswordEmail] = useState(""); // Novo estado para o e-mail de recuperação
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
+  const [newPasswordData, setNewPasswordData] = useState({ // Estado para a nova senha
+    newPassword: "",
+    confirmNewPassword: "",
+  });
+
+  useEffect(() => {
+    if (isRecoveryMode) {
+      setShowResetPasswordForm(true);
+      setShowForgotPassword(false); // Garante que o formulário de "esqueceu senha" não apareça junto
+    }
+  }, [isRecoveryMode]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -130,20 +154,48 @@ const Auth = () => {
       forgotPasswordSchema.parse({ email: forgotPasswordEmail });
 
       const { error } = await supabase.auth.resetPasswordForEmail(forgotPasswordEmail, {
-        redirectTo: `${window.location.origin}/auth?type=recovery`, // Redireciona para a página de auth com um tipo de recuperação
+        redirectTo: `${window.location.origin}/auth?type=recovery`,
       });
 
       if (error) throw error;
 
       toast.success("Verifique seu e-mail para redefinir sua senha.");
-      setShowForgotPassword(false); // Esconde o formulário de recuperação após o envio
-      setForgotPasswordEmail(""); // Limpa o campo de e-mail
+      setShowForgotPassword(false);
+      setForgotPasswordEmail("");
     } catch (error) {
       if (error instanceof z.ZodError) {
         toast.error(error.errors[0].message);
       } else {
         console.error("Error resetting password:", error);
         toast.error("Erro ao solicitar redefinição de senha. Verifique o e-mail.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      resetPasswordSchema.parse(newPasswordData);
+
+      const { error } = await supabase.auth.updateUser({
+        password: newPasswordData.newPassword,
+      });
+
+      if (error) throw error;
+
+      toast.success("Sua senha foi redefinida com sucesso! Faça login com a nova senha.");
+      setShowResetPasswordForm(false); // Esconde o formulário de nova senha
+      setNewPasswordData({ newPassword: "", confirmNewPassword: "" }); // Limpa os campos
+      navigate("/auth", { replace: true }); // Redireciona para a página de login, limpando o histórico
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast.error(error.errors[0].message);
+      } else {
+        console.error("Error updating password:", error);
+        toast.error("Erro ao redefinir a senha. Tente novamente.");
       }
     } finally {
       setLoading(false);
@@ -160,7 +212,83 @@ const Auth = () => {
             <CardDescription>Entre ou crie sua conta para acessar o sistema</CardDescription>
           </CardHeader>
           <CardContent>
-            {!showForgotPassword ? (
+            {showResetPasswordForm ? ( // Exibe o formulário de nova senha se estiver no modo de recuperação
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold text-foreground">Definir Nova Senha</h3>
+                <p className="text-sm text-muted-foreground">
+                  Insira e confirme sua nova senha.
+                </p>
+                <form onSubmit={handleResetPassword} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="new-password">Nova Senha</Label>
+                    <Input
+                      id="new-password"
+                      type="password"
+                      placeholder="Mínimo 6 caracteres"
+                      value={newPasswordData.newPassword}
+                      onChange={(e) => setNewPasswordData({ ...newPasswordData, newPassword: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="confirm-new-password">Confirmar Nova Senha</Label>
+                    <Input
+                      id="confirm-new-password"
+                      type="password"
+                      placeholder="Confirme sua nova senha"
+                      value={newPasswordData.confirmNewPassword}
+                      onChange={(e) => setNewPasswordData({ ...newPasswordData, confirmNewPassword: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <Button type="submit" className="w-full" disabled={loading}>
+                    {loading ? "Redefinindo..." : "Redefinir Senha"}
+                  </Button>
+                  <Button 
+                    variant="link" 
+                    className="w-full text-sm text-muted-foreground mt-2" 
+                    onClick={() => {
+                      setShowResetPasswordForm(false);
+                      navigate("/auth", { replace: true }); // Volta para o login/cadastro
+                    }}
+                    type="button"
+                  >
+                    Cancelar
+                  </Button>
+                </form>
+              </div>
+            ) : showForgotPassword ? ( // Exibe o formulário de "esqueceu senha"
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold text-foreground">Redefinir Senha</h3>
+                <p className="text-sm text-muted-foreground">
+                  Insira seu e-mail para receber um link de redefinição de senha.
+                </p>
+                <form onSubmit={handleForgotPassword} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="forgot-password-email">Email</Label>
+                    <Input
+                      id="forgot-password-email"
+                      type="email"
+                      placeholder="seu@email.com"
+                      value={forgotPasswordEmail}
+                      onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <Button type="submit" className="w-full" disabled={loading}>
+                    {loading ? "Enviando..." : "Enviar Link de Redefinição"}
+                  </Button>
+                  <Button 
+                    variant="link" 
+                    className="w-full text-sm text-muted-foreground mt-2" 
+                    onClick={() => setShowForgotPassword(false)}
+                    type="button"
+                  >
+                    Voltar para o Login
+                  </Button>
+                </form>
+              </div>
+            ) : ( // Exibe as abas de login/cadastro por padrão
               <Tabs defaultValue="login">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="login">Entrar</TabsTrigger>
@@ -197,7 +325,7 @@ const Auth = () => {
                       variant="link" 
                       className="w-full text-sm text-muted-foreground mt-2" 
                       onClick={() => setShowForgotPassword(true)}
-                      type="button" // Importante para não submeter o formulário pai
+                      type="button"
                     >
                       Esqueceu sua senha?
                     </Button>
@@ -265,37 +393,6 @@ const Auth = () => {
                   </form>
                 </TabsContent>
               </Tabs>
-            ) : (
-              <div className="space-y-4">
-                <h3 className="text-xl font-semibold text-foreground">Redefinir Senha</h3>
-                <p className="text-sm text-muted-foreground">
-                  Insira seu e-mail para receber um link de redefinição de senha.
-                </p>
-                <form onSubmit={handleForgotPassword} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="forgot-password-email">Email</Label>
-                    <Input
-                      id="forgot-password-email"
-                      type="email"
-                      placeholder="seu@email.com"
-                      value={forgotPasswordEmail}
-                      onChange={(e) => setForgotPasswordEmail(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <Button type="submit" className="w-full" disabled={loading}>
-                    {loading ? "Enviando..." : "Enviar Link de Redefinição"}
-                  </Button>
-                  <Button 
-                    variant="link" 
-                    className="w-full text-sm text-muted-foreground mt-2" 
-                    onClick={() => setShowForgotPassword(false)}
-                    type="button"
-                  >
-                    Voltar para o Login
-                  </Button>
-                </form>
-              </div>
             )}
           </CardContent>
         </Card>
