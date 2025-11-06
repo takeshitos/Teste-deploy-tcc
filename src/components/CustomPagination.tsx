@@ -35,7 +35,7 @@ export const CustomPagination = ({ currentPage, totalPages, onPageChange }: Cust
           <PaginationLink
             onClick={() => onPageChange(Math.max(1, currentPage - 1))}
             className={cn(
-              "flex items-center gap-1 h-9 px-3 py-2",
+              "flex items-center gap-1 h-10 px-4 py-2.5", // Ajustado para h-10 px-4 py-2.5
               currentPage === 1 ? "pointer-events-none opacity-50" : undefined
             )}
             aria-label="Ir para a página anterior"
@@ -48,11 +48,11 @@ export const CustomPagination = ({ currentPage, totalPages, onPageChange }: Cust
         {startPage > 1 && (
           <>
             <PaginationItem>
-              <PaginationLink onClick={() => onPageChange(1)} isActive={1 === currentPage} className="h-9 px-3 py-2">1</PaginationLink>
+              <PaginationLink onClick={() => onPageChange(1)} isActive={1 === currentPage} className="h-10 px-4 py-2.5">1</PaginationLink>
             </PaginationItem>
             {startPage > 2 && (
               <PaginationItem>
-                <PaginationEllipsis className="h-9 px-3 py-2" />
+                <PaginationEllipsis className="h-10 px-4 py-2.5" />
               </PaginationItem>
             )}
           </>
@@ -63,7 +63,7 @@ export const CustomPagination = ({ currentPage, totalPages, onPageChange }: Cust
             <PaginationLink
               onClick={() => onPageChange(number)}
               isActive={number === currentPage}
-              className="h-9 px-3 py-2"
+              className="h-10 px-4 py-2.5" // Ajustado para h-10 px-4 py-2.5
             >
               {number}
             </PaginationLink>
@@ -74,11 +74,11 @@ export const CustomPagination = ({ currentPage, totalPages, onPageChange }: Cust
           <>
             {endPage < totalPages - 1 && (
               <PaginationItem>
-                <PaginationEllipsis className="h-9 px-3 py-2" />
+                <PaginationEllipsis className="h-10 px-4 py-2.5" />
               </PaginationItem>
             )}
             <PaginationItem>
-              <PaginationLink onClick={() => onPageChange(totalPages)} isActive={totalPages === currentPage} className="h-9 px-3 py-2">{totalPages}</PaginationLink>
+              <PaginationLink onClick={() => onPageChange(totalPages)} isActive={totalPages === currentPage} className="h-10 px-4 py-2.5">{totalPages}</PaginationLink>
             </PaginationItem>
           </>
         )}
@@ -87,7 +87,7 @@ export const CustomPagination = ({ currentPage, totalPages, onPageChange }: Cust
           <PaginationLink
             onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
             className={cn(
-              "flex items-center gap-1 h-9 px-3 py-2",
+              "flex items-center gap-1 h-10 px-4 py-2.5", // Ajustado para h-10 px-4 py-2.5
               currentPage === totalPages ? "pointer-events-none opacity-50" : undefined
             )}
             aria-label="Ir para a próxima página"
