@@ -53,7 +53,7 @@ const Eventos = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation isAuthenticated={!!user} onLogout={signOut} />
+      <Navigation />
       
       <main className="container mx-auto px-4 py-16">
         <h1 className="text-4xl font-bold text-foreground mb-8">Eventos RCC</h1>

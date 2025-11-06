@@ -70,7 +70,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation isAuthenticated={!!user} onLogout={signOut} />
+      <Navigation />
       
       {/* Hero Section */}
       <section className="relative h-[500px] flex items-center justify-center overflow-hidden">

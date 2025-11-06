@@ -32,6 +32,7 @@ const EventDetail = () => {
   const [event, setEvent] = useState<Evento | null>(null);
   const [loading, setLoading] = useState(true);
   const [isRegistered, setIsRegistered] = useState(false);
+  const [isRegistrationConfirmed, setIsRegistrationConfirmed] = useState(false); // Novo estado
   const [isRegistering, setIsRegistering] = useState(false);
 
   useEffect(() => {
@@ -72,13 +73,14 @@ const EventDetail = () => {
     try {
       const { data, error } = await supabase
         .from("inscricoes")
-        .select("id")
+        .select("id, confirmado") // Selecionar também o status de confirmação
         .eq("evento_id", eventId)
         .eq("user_id", user.id)
         .single();
 
       if (error && error.code !== 'PGRST116') throw error; // PGRST116 means no rows found
       setIsRegistered(!!data);
+      setIsRegistrationConfirmed(data?.confirmado || false); // Definir o status de confirmação
     } catch (error) {
       console.error("Error checking registration status:", error);
       toast.error("Erro ao verificar status de inscrição.");
@@ -95,16 +97,18 @@ const EventDetail = () => {
 
     setIsRegistering(true);
     try {
+      const isConfirmedInitially = event.taxa_inscricao && event.taxa_inscricao > 0 ? false : true;
       const { error } = await supabase.from("inscricoes").insert({
         evento_id: event.id,
         user_id: user.id,
-        confirmado: event.taxa_inscricao && event.taxa_inscricao > 0 ? false : true, // Auto-confirm if no fee
+        confirmado: isConfirmedInitially, // Auto-confirm if no fee
         presente: false,
       });
 
       if (error) throw error;
 
       setIsRegistered(true);
+      setIsRegistrationConfirmed(isConfirmedInitially); // Atualizar o estado de confirmação
       toast.success("Inscrição realizada com sucesso!");
       if (event.taxa_inscricao && event.taxa_inscricao > 0) {
         toast.info("Sua inscrição está pendente de pagamento. Utilize os dados PIX abaixo.");
@@ -120,7 +124,7 @@ const EventDetail = () => {
   if (loading || authLoading) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation isAuthenticated={!!user} onLogout={signOut} />
+        <Navigation />
         <div className="container mx-auto px-4 py-16 text-center">
           <p className="text-muted-foreground">Carregando detalhes do evento...</p>
         </div>
@@ -131,7 +135,7 @@ const EventDetail = () => {
   if (!event) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation isAuthenticated={!!user} onLogout={signOut} />
+        <Navigation />
         <div className="container mx-auto px-4 py-16 text-center">
           <p className="text-muted-foreground">Evento não encontrado.</p>
           <Link to="/eventos" className="text-primary hover:underline mt-4 block">Voltar para Eventos</Link>
@@ -149,7 +153,7 @@ const EventDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation isAuthenticated={!!user} onLogout={signOut} />
+      <Navigation />
       
       <main className="container mx-auto px-4 py-16">
         <Card className="overflow-hidden">
@@ -208,7 +212,7 @@ const EventDetail = () => {
               </div>
             )}
 
-            {isRegistered && hasFee && !event.confirmado && showPixInfo && (
+            {isRegistered && hasFee && !isRegistrationConfirmed && showPixInfo && (
               <Card className="mt-8 bg-card text-card-foreground border-primary/20">
                 <CardHeader>
                   <CardTitle className="text-2xl flex items-center gap-2">
